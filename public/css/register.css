@@ -1,0 +1,110 @@
+/* General Styles */
+body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(to right, #ffecd2, #fcb69f);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    color: #333;
+}
+
+/* Form Container */
+.register-container {
+    background: #ffffff;
+    padding: 50px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    width: 500px;
+    max-width: 90%;
+}
+
+.register-container h2 {
+    margin-bottom: 20px;
+    color: #2c3e50;
+    font-size: 30px;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* Form Fields */
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #2c3e50;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #ff7e5f;
+    box-shadow: 0 0 5px rgba(255, 126, 95, 0.5);
+}
+
+/* Button Styles */
+.btn {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    background: #ff7e5f;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.btn:hover {
+    background: #eb5757;
+}
+
+/* Links */
+a {
+    color: #ff7e5f;
+    text-decoration: none;
+    font-weight: bold;
+    display: block;
+    text-align: center;
+    margin-top: 15px;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .register-container {
+        padding: 30px;
+        width: 90%;
+    }
+}
+
+
+/* Input Error Styles */
+input:invalid {
+    border: 2px solid red;
+  }
+  
+  /* Valid Input Styles */
+  input:valid {
+    border: 2px solid green;
+  }
+  

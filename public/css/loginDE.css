@@ -1,0 +1,134 @@
+/* General Styles */
+body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #74ebd5, #9face6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    color: #333;
+    line-height: 1.5;
+}
+
+/* Form Container */
+.login-container {
+    background: #ffffff;
+    padding: 40px 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    width: 400px;
+    max-width: 95%;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.login-container h2 {
+    margin-bottom: 20px;
+    color: #34495e;
+    font-size: 26px;
+    text-align: center;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+/* Form Fields */
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #2c3e50;
+    font-size: 14px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    box-sizing: border-box;
+    background-color: #f9f9f9;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 8px rgba(52, 152, 219, 0.3);
+    background-color: #fff;
+}
+
+/* Button Styles */
+.btn {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(to right, #3498db, #2980b9);
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s ease, background 0.3s ease;
+    text-align: center;
+}
+
+.btn:hover {
+    background: linear-gradient(to right, #2980b9, #1c6ea4);
+    transform: scale(1.02);
+}
+
+/* Links */
+a {
+    color: #3498db;
+    text-decoration: none;
+    font-weight: bold;
+    display: block;
+    text-align: center;
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+a:hover {
+    text-decoration: underline;
+    color: #2980b9;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .login-container {
+        padding: 30px 20px;
+        width: 90%;
+    }
+
+    .login-container h2 {
+        font-size: 24px;
+    }
+
+    .btn {
+        font-size: 15px;
+        padding: 12px;
+    }
+
+    a {
+        font-size: 13px;
+    }
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

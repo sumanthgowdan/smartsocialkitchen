@@ -1,0 +1,255 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: "Roboto", sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    line-height: 1.6;
+    /* padding: 20px; */
+    transition: all 0.3s ease-in-out;
+  }
+  
+  /* Navbar Styling */
+  .navbar {
+    background-color: #155e63;
+    color: white;
+    padding: 1.5rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .navbar h1 {
+    font-size: 2rem;
+    letter-spacing: 1.2px;
+    font-weight: bold;
+    transition: color 0.3s;
+  }
+  
+  .navbar nav ul {
+    list-style: none;
+    display: flex;
+    gap: 2rem;
+  }
+  
+  .navbar nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: 500;
+    position: relative;
+    transition: color 0.3s, transform 0.2s;
+  }
+  
+  .navbar nav ul li a:hover, 
+  .navbar nav ul li a.active {
+    color: #f2d184;
+    transform: translateY(-3px);
+  }
+  
+  .navbar nav ul li a::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    width: 0;
+    height: 3px;
+    background-color: #f2d184;
+    transform: translateX(-50%);
+    transition: width 0.3s ease-in-out;
+  }
+  
+  .navbar nav ul li a:hover::after {
+    width: 80%;
+  }
+  
+  /* Main Content */
+  main {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 30px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  main h2 {
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 25px;
+    color: #2c6e63;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+  }
+  
+  .summary-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 25px;
+  }
+  
+  .summary-container div {
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+  }
+  
+  .summary-container div:hover {
+    transform: translateY(-5px);
+  }
+  
+  .summary-container h3 {
+    font-size: 1.6rem;
+    margin-bottom: 12px;
+    color: #2c6e63;
+    border-bottom: 3px solid #4caf50;
+    display: inline-block;
+  }
+  
+  .summary-container p, 
+  .summary-container ul {
+    font-size: 1rem;
+    color: #555;
+    line-height: 1.5;
+  }
+  
+  #menu-list {
+    list-style: none;
+    padding-left: 0;
+  }
+  
+  #menu-list li {
+    padding: 8px 0;
+    border-bottom: 1px dashed #ddd;
+    margin-bottom: 8px;
+  }
+  
+  #menu-list li:last-child {
+    border-bottom: none;
+  }
+  
+  .price-info {
+    text-align: center;
+    margin-top: 15px;
+  }
+  
+  .price-info h3 {
+    margin-bottom: 12px;
+    font-size: 1.5rem;
+  }
+  
+  .price-info p {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #4caf50;
+  }
+  
+  /* Button Styles */
+  button {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    margin-top: 25px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s;
+  }
+  
+  button:hover {
+    background-color: #45a049;
+    transform: scale(1.05);
+  }
+  
+  /* Footer */
+  footer {
+    margin-top: 30px;
+    padding: 1.5rem;
+    background-color: #155e63;
+    color: white;
+    text-align: center;
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+    box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Contact Section */
+  .contact {
+    text-align: center;
+    margin-top: 40px;
+    padding-top: 30px;
+    border-top: 1px solid #e0e0e0;
+  }
+  
+  .contact h3 {
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+    color: #333;
+  }
+  
+  .contact p {
+    font-size: 1rem;
+    color: #555;
+  }
+  
+  .contact a {
+    color: #007bff;
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  
+  .contact a:hover {
+    color: #0056b3;
+  }
+  
+  .contact button {
+    margin-top: 20px;
+    padding: 12px 25px;
+    background: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  
+  .contact button:hover {
+    background: #218838;
+  }
+  
+  /* Icons */
+  .icon-checkmark {
+    font-size: 48px;
+    color: #4caf50;
+    margin-bottom: 15px;
+    text-align: center;
+  }
+  
+  .cc {
+    font-size: 28px;
+    color: #333;
+    margin-bottom: 15px;
+    text-align: center;
+  }
+  
+  /* Responsive Design */
+  @media (min-width: 768px) {
+    .summary-container {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  

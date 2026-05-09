@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Booking Confirmation</title>
+    <link rel="stylesheet" href="./css/event-summary.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Event Successfully Booked!</h1>
+        <p>Your event has been confirmed. Our team will reach out shortly.</p>
+
+        <div class="event-details">
+            <h2>Event Details:</h2>
+            <p><strong>Event Type:</strong> <span id="eventType"></span></p>
+            <p><strong>Number of Chefs:</strong> <span id="numChefs"></span></p>
+            <p><strong>Event Date:</strong> <span id="eventDate"></span></p>
+            <p><strong>Event Time:</strong> <span id="eventTime"></span></p>
+        </div>
+
+        <div class="thank-you">
+            <p>Thank you for choosing Social Kitchen!</p>
+        </div>
+
+        <div class="contact-info">
+            <h2>Need Assistance?</h2>
+            <p>Email: support@socialkitchen.com</p>
+            <p>Phone: +1 234 567 890</p>
+        </div>
+
+        <a href="welcome-home.html" class="btn">Home</a>
+    </div>
+
+    <script>
+        // Retrieve data from localStorage
+        document.getElementById('eventType').innerText = localStorage.getItem('eventType');
+        document.getElementById('numChefs').innerText = localStorage.getItem('numChefs');
+        document.getElementById('eventDate').innerText = localStorage.getItem('eventDate');
+        document.getElementById('eventTime').innerText = localStorage.getItem('eventTime');
+
+        // Optional: Clear localStorage after displaying
+        localStorage.clear();
+    </script>
+</body>
+</html>

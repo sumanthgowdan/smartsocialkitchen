@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menu - Social Kitchen</title>
+  <link rel="stylesheet" href="./css/menu.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+</head>
+<body>
+  <header>
+    <div class="navbar">
+      <h1>Social Kitchen</h1>
+      <nav>
+        <ul>
+          <li><a href="welcome-home.html">Home</a></li>
+          <li><a href="#">Menu</a></li>
+          <li><a href="events.html">Events</a></li>
+
+          <li><a href="about-us.html">About Us</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <h2>Tell Our Chef What You'd Like</h2>
+    <p>Choose from our curated selection of healthy, delicious dishes.</p>
+<!-- Search Bar with Icon -->
+<div class="search-bar">
+  <div class="search-wrapper">
+    <input
+      type="text"
+      id="search-bar"
+      placeholder="Search for a menu item..."
+      oninput="searchMenu(event)"
+    />
+    <i class="fas fa-search search-icon"></i> <!-- Font Awesome search icon -->
+    <!-- <span class="search-icon">&#128269;</span> Unicode for search icon -->
+  </div>
+</div>
+
+
+
+
+    <div id="menu-container" class="menu-container">
+        
+
+
+      
+    </div>
+  </main>
+
+
+  <div id="order-summary">
+    <h3>Selected Items:</h3>
+    <ul id="selected-items"></ul>
+    <p>Total Price: ₹<span id="total-price">0</span></p>
+    <button id="proceed-btn" disabled>Proceed to Chef Selection</button>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 Social Kitchen. All rights reserved.</p>
+  </footer>
+
+  <script src="./js/demoMenu.js"></script>
+</body>
+</html>

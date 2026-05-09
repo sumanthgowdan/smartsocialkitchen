@@ -1,0 +1,235 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    /* font-family: 'Arial', sans-serif; */
+    font-family: "Roboto", sans-serif;
+
+    background-color: #f4f4f9;
+    color: #333;
+    line-height: 1.6;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  /* Navbar Styling */
+  .navbar {
+    background-color: #155e63;
+    color: white;
+    padding: 1.5rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .navbar h1 {
+    font-size: 2rem;
+    letter-spacing: 1.2px;
+    font-weight: bold;
+    transition: color 0.3s;
+  }
+  
+  .navbar nav ul {
+    list-style: none;
+    display: flex;
+    gap: 2rem;
+  }
+  
+  .navbar nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: 500;
+    transition: color 0.3s, transform 0.2s;
+    position: relative;
+  }
+  
+  .navbar nav ul li a:hover, 
+  .navbar nav ul li a.active {
+    color: #f2d184;
+    transform: translateY(-3px);
+  }
+  
+  .navbar nav ul li a::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    width: 0;
+    height: 3px;
+    background-color: #f2d184;
+    transform: translateX(-50%);
+    transition: width 0.3s ease-in-out;
+  }
+  
+  .navbar nav ul li a:hover::after {
+    width: 80%;
+  }
+  
+  /* Main Content */
+  main {
+    max-width: 1200px;
+    margin: 3rem auto;
+    text-align: center;
+    padding: 2rem;
+  }
+  
+  main h2 {
+    font-size: 2.5rem;
+    color: #2c6e63;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+  }
+  
+  main p {
+    font-size: 1.1rem;
+    color: #555;
+    max-width: 700px;
+    margin: 0 auto 2.5rem;
+  }
+  
+  /* Chef Container */
+  .chef-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+  
+  /* Chef Card */
+  .chef-card {
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    text-align: center;
+    padding: 2rem 1.5rem;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  
+  .chef-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+  }
+  
+  .chef-card img {
+    border-radius: 10%;
+    width: 130px;
+    height: 130px;
+    object-fit: cover;
+    margin-bottom: 1rem;
+    transition: transform 0.3s ease;
+  }
+  
+  .chef-card:hover img {
+    transform: scale(1.1);
+  }
+  
+  .chef-card h3 {
+    color: #2c6e63;
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .chef-card p {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 0.75rem;
+  }
+  
+  .chef-card .price {
+    font-weight: bold;
+    color: #d9822b;
+    font-size: 1.1rem;
+  }
+  
+  .chef-card .rating {
+    color: #ffa500;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+  
+  /* Chef Card Button */
+  .chef-card button {
+    background: #2c6e63;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: background 0.3s, transform 0.2s;
+  }
+  
+  .chef-card button:hover {
+    background: #1f4e45;
+    transform: scale(1.05);
+  }
+  
+  /* Proceed Button */
+  #proceed-btn {
+    background: #2c6e63;
+    color: white;
+    padding: 1rem 2.5rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: 500;
+    transition: background 0.3s, transform 0.2s;
+    display: inline-block;
+    margin: 3rem 0;
+  }
+  
+  #proceed-btn:disabled {
+    background: #bbb;
+    cursor: not-allowed;
+  }
+  
+  #proceed-btn:hover:not(:disabled) {
+    background: #1f4e45;
+    transform: translateY(-3px);
+  }
+  
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 1.5rem;
+    background-color: #155e63;
+    color: white;
+    font-size: 1rem;
+    letter-spacing: 0.5px;
+    margin-top: 2rem;
+    box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .navbar {
+      flex-direction: column;
+      padding: 1rem;
+    }
+    
+    .navbar nav ul {
+      flex-direction: column;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+  
+    main {
+      padding: 1rem;
+    }
+  
+    .chef-container {
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+  }
+  

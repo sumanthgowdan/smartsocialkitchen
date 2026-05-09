@@ -1,0 +1,148 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    color: #333;
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #f3f4f6;
+}
+
+/* Header Styling */
+header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.1); /* transparent */
+    /*backdrop-filter: blur(10px); /* glass effect */
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+    box-shadow: none;
+    z-index: 1000;
+}
+
+
+    header h1 {
+        font-size: 1.8rem;
+        font-weight: bold;
+        letter-spacing: 1px;
+        background: linear-gradient(90deg, #ffffff, #f2d184);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+     
+
+nav {
+    display: flex;
+    gap: 1rem;
+}
+
+nav a {
+    color: black;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border: 2px solid transparent;
+    border-radius: 5px;
+    transition: all 0.3s;
+}
+
+nav a:hover {
+    background-color: #495057;
+    color: white;
+    border-color: #495057;
+}
+
+/* Main Content */
+main {
+    flex: 1;
+    padding: 2rem;
+    text-align: center;
+    background: url('../uploads/food_bg1.jpg') no-repeat center center/cover; /* Add Background Image */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: rgb(15, 53, 3); /* Adjust text color for better contrast */
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7); /* Add shadow for better readability */
+   
+}
+
+main h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    font-weight: bold;
+}
+
+main p {
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+    max-width: 600px;
+}
+
+/* Buttons */
+button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 0.7rem 1.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+button:hover {
+    background-color: #45a049;
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Footer */
+footer {
+    background-color: #343a40;
+    color: white;
+    text-align: center;
+    padding: 1rem 0;
+    margin-top: 2rem;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+}
+
+footer p {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 1.5rem;
+    }
+
+    nav a {
+        font-size: 0.9rem;
+        padding: 0.4rem 0.8rem;
+    }
+
+    main h2 {
+        font-size: 2rem;
+    }
+
+    main p {
+        font-size: 1rem;
+    }
+}
+

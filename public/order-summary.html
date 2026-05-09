@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Summary - Social Kitchen</title>
+  <link rel="stylesheet" href="./css/order-summary.css">
+</head>
+<body>
+  <header>
+    <div class="navbar">
+      <h1>Social Kitchen</h1>
+      <nav>
+        <ul>
+          <!-- <li><a href="index.html">Home</a></li> -->
+          <!-- <li><a href="menu.html">Menu</a></li> -->
+          <!-- <li><a href="about.html">About Us</a></li> -->
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="icon-checkmark">✔</div>
+    <h1 class="cc">Booking Confirmed!</h1>
+    <!-- <h2>Your Order Summary</h2> -->
+    <div id="summary-container" class="summary-container">
+      <!-- Booking Information -->
+      <div class="booking-info">
+        <h3>Booking Date and Time:</h3>
+        <p id="booking-time"></p>
+
+        <h3>Duration:</h3>
+        <p id="duration"></p>
+      </div>
+
+      <!-- Chef Information -->
+      <div class="chef-info">
+        <h3>Your Chef:</h3>
+        <div id="chef-details">
+          <p id="chef-name"></p>
+          <p id="chef-specialty"></p>
+        </div>
+      </div>
+
+      <!-- Selected Dishes -->
+      <div class="menu-info">
+        <h3>Your Dishes:</h3>
+        <ul id="menu-list"></ul>
+      </div>
+
+      <!-- Total Price -->
+      <div class="price-info">
+        <h3>Total Price:</h3>
+        <p>₹<span id="total-price">0</span></p>
+      </div>
+    </div>
+    <button onclick="window.location.href='welcome-home.html'">Back to Home</button>
+  </main>
+
+  <!-- <div class="contact-info">
+    <h2>Need Assistance?</h2>
+    <p>Email: support@socialkitchen.com</p>
+    <p>Phone: +1 234 567 890</p>
+  </div> -->
+
+  <!-- Contact Section -->
+  <div class="contact">
+    <h2>Contact Us</h2>
+    <p>If you have any questions or need further assistance, please contact us at:</p>
+    <p>Email: <a href="mailto:support@socialkitchen.com">support@socialkitchen.com</a></p>
+    <p>Phone: +1 234 567 890</p>
+    <h3>Thank you for choosing Social Kitchen!</h3>
+    <!-- <button onclick="location.href='home.html'">Back to Home</button> -->
+</div>
+
+  <footer>
+    <p>&copy; 2024 Social Kitchen. All rights reserved.</p>
+  </footer>
+
+  <script src="./js/order-summary.js"></script>
+</body>
+</html>
