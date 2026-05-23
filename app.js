@@ -17,7 +17,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // PostgreSQL Connection
 const db = new Pool({
   connectionString:
-    'postgresql://postgres.xqvqyrhympsjelqchlov:Sumanth132004@aws-1-ap-southeast-2.pooler.supabase.com:5432/postgres',
+    'process.env.DATABASE_URL',
   ssl: {
     rejectUnauthorized: false
   }
