@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:3000';
+const API_BASE_URL = '';
 const chefContainer = document.getElementById('chef-container');
 const proceedButton = document.getElementById('proceed-btn');
 let selectedChef = null;
@@ -10,7 +10,7 @@ async function fetchChefs() {
 
     chefContainer.innerHTML = chefs.map(chef => `
       <div class="chef-card">
-        <img src="http://localhost:3000${chef.image}" alt="${chef.name}">
+        <img src="${API_BASE_URL}${chef.image}" alt="${chef.name}">
         <h3>${chef.name}</h3>
         <p>${chef.specialty}</p>
         

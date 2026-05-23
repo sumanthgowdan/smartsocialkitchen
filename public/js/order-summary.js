@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
         total_amount: totalPrice
     };
 
-    fetch('http://localhost:3000/api/bookings', {
+    fetch('/api/bookings', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

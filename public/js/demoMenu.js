@@ -362,7 +362,7 @@
 // fetchMenu();
 
 
-const API_BASE_URL = 'http://localhost:3000';
+const API_BASE_URL = window.location.origin;
 const menuContainer = document.getElementById('menu-container');
 const selectedItems = document.getElementById('selected-items');
 const totalPriceElement = document.getElementById('total-price');
@@ -390,7 +390,7 @@ function renderMenuItems(menus) {
     menuContainer.innerHTML = menus
         .map(menu => `
             <div class="menu-item">
-                <img src="http://localhost:3000${menu.image}" alt="${menu.name}">
+                <img src="${API_BASE_URL}${menu.image}"
                 <h3>${menu.name}</h3>
                 <p>${menu.description}</p>
                 <p>Price: ₹${menu.price}</p>
