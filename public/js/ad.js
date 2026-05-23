@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:3000';
+const API_BASE_URL = window.location.origin;
 
 // Function to show the selected tab
 function showTab(tabId) {
@@ -39,7 +39,7 @@ async function fetchMenuData() {
                 <td>${menu.name}</td>
                 <td>${menu.description}</td>
                 <td>₹${menu.price}</td>
-                <td><img src="http://localhost:3000${menu.image}" alt="${menu.name}" width="50"></td>
+                <td><img src="${API_BASE_URL}${menu.image}" alt="${menu.name}" width="50"></td>
                 <td>
                     <button onclick="editMenu(${menu.id}, '${menu.name}', '${menu.description}', ${menu.price}, '${menu.image}')">Edit</button>
                     <button onclick="deleteMenu(${menu.id})">Delete</button>
