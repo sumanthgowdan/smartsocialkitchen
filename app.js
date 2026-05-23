@@ -518,26 +518,34 @@ app.post('/api/events', async (req, res) => {
   try {
 
     const {
-  user_id,
-  event_type,
-  event_date,
-  event_time,
-  guests
-} = req.body;
+      user_id,
+      event_type,
+      no_of_chefs,
+      event_date,
+      event_time
+    } = req.body;
 
-   const sql = `
-  INSERT INTO events
-  (user_id, event_type, event_date, event_time, guests)
-  VALUES ($1, $2, $3, $4, $5)
-`;
+    const sql = `
+      INSERT INTO events
+      (
+        user_id,
+        event_type,
+        no_of_chefs,
+        event_date,
+        event_time
+      )
+      VALUES ($1, $2, $3, $4, $5)
+    `;
 
     await db.query(sql, [
-  user_id,
-  event_type,
-  event_date,
-  event_time,
-  guests
-]);
+
+      user_id,
+      event_type,
+      no_of_chefs,
+      event_date,
+      event_time
+
+    ]);
 
     res.json({
       message: 'Event created successfully'
@@ -548,7 +556,7 @@ app.post('/api/events', async (req, res) => {
     console.error(err);
 
     res.status(500).json({
-      error: 'Database error'
+      error: err.message
     });
 
   }

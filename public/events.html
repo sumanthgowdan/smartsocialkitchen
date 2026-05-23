@@ -1,112 +1,104 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Book Chefs for Your Event</title>
-    <link rel="stylesheet" href="./css/events.css">
-</head>
-<body>
-
-
+    <link rel="stylesheet" href="./css/events.css" />
+  </head>
+  <body>
     <div class="navbar">
-        <div class="logo">Social Kitchen</div>
-        <ul class="nav-links">
-            <li><a href="welcome-home.html">Home</a></li>
-            <li><a href="menu.html">Menu</a></li>
-            <li><a href="events.html" class="active">Events</a></li>
-            <li><a href="about-us.html">About Us</a></li>
-            <li><a href="index.html">Logout</a></li>
-        </ul>
+      <div class="logo">Social Kitchen</div>
+      <ul class="nav-links">
+        <li><a href="welcome-home.html">Home</a></li>
+        <li><a href="menu.html">Menu</a></li>
+        <li><a href="events.html" class="active">Events</a></li>
+        <li><a href="about-us.html">About Us</a></li>
+        <li><a href="index.html">Logout</a></li>
+      </ul>
     </div>
 
-
     <div class="container">
-        <h1>Book Chefs for Your Event</h1>
-        <p>Let our team of professional chefs make your event special</p>
+      <h1>Book Chefs for Your Event</h1>
+      <p>Let our team of professional chefs make your event special</p>
 
-        <form id="eventForm">
-            <div class="form-group">
-                <label for="eventType">Event Type</label>
-                <select id="eventType" required>
-                    <option value="" disabled selected>Select event type</option>
-                    <option value="Birthday">Birthday</option>
-                    <option value="Wedding">Wedding</option>
-                    <option value="Corporate">Corporate</option>
-                    <option value="Other">Other</option>
-                </select>
-            </div>
+      <form id="eventForm">
+        <div class="form-group">
+          <label for="eventType">Event Type</label>
+          <select id="eventType" required>
+            <option value="" disabled selected>Select event type</option>
+            <option value="Birthday">Birthday</option>
+            <option value="Wedding">Wedding</option>
+            <option value="Corporate">Corporate</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
 
-            <div class="form-group">
-                <label for="numChefs">Number of Chefs Needed</label>
-                <input type="number" id="numChefs" min="1" value="1" required>
-            </div>
+        <div class="form-group">
+          <label for="numChefs">Number of Chefs Needed</label>
+          <input type="number" id="numChefs" min="1" value="1" required />
+        </div>
 
-            <div class="form-group">
-                <label for="eventDate">Event Date</label>
-                <input type="date" id="eventDate" required>
-            </div>
+        <div class="form-group">
+          <label for="eventDate">Event Date</label>
+          <input type="date" id="eventDate" required />
+        </div>
 
-            <div class="form-group">
-                <label for="eventTime">Event Time</label>
-                <input type="time" id="eventTime" required>
-            </div>
+        <div class="form-group">
+          <label for="eventTime">Event Time</label>
+          <input type="time" id="eventTime" required />
+        </div>
 
-            <button type="button" onclick="submitEvent()">Book Event</button>
-        </form>
+        <button type="button" onclick="submitEvent()">Book Event</button>
+      </form>
     </div>
 
     <script>
+      async function submitEvent() {
+        // Get form values
+        const eventType = document.getElementById("eventType").value;
+        const numChefs = document.getElementById("numChefs").value;
+        const eventDate = document.getElementById("eventDate").value;
+        const eventTime = document.getElementById("eventTime").value;
 
-        async function submitEvent() {
+        try {
+          const response = await fetch("/api/events", {
+            method: "POST",
 
-            // Get form values
-            const eventType = document.getElementById('eventType').value;
-            const numChefs = document.getElementById('numChefs').value;
-            const eventDate = document.getElementById('eventDate').value;
-            const eventTime = document.getElementById('eventTime').value;
+            headers: {
+              "Content-Type": "application/json",
+            },
 
-            try {
+            body: JSON.stringify({
+              user_id: localStorage.getItem("user_id"),
 
-                const response = await fetch('http://localhost:3000/api/events', {
+              event_type: eventType,
 
-                    method: 'POST',
+              no_of_chefs: numChefs,
 
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+              event_date: eventDate,
 
-                    body: JSON.stringify({
-                        user_id: localStorage.getItem("user_id"),
-                        event_type: eventType,
-                        event_date: eventDate,
-                        guests: numChefs
-                    })
+              event_time: eventTime,
+            }),
+          });
 
-                });
+          const data = await response.json();
 
-                const data = await response.json();
+          alert(data.message);
 
-                alert(data.message);
+          // Store locally if needed
+          localStorage.setItem("eventType", eventType);
+          localStorage.setItem("numChefs", numChefs);
+          localStorage.setItem("eventDate", eventDate);
+          localStorage.setItem("eventTime", eventTime);
 
-                // Store locally if needed
-                localStorage.setItem('eventType', eventType);
-                localStorage.setItem('numChefs', numChefs);
-                localStorage.setItem('eventDate', eventDate);
-                localStorage.setItem('eventTime', eventTime);
-
-                // Redirect
-                window.location.href = 'event-summary.html';
-
-            } catch (error) {
-
-                console.log(error);
-                alert('Failed to book event');
-
-            }
-
+          // Redirect
+          window.location.href = "event-summary.html";
+        } catch (error) {
+          console.log(error);
+          alert("Failed to book event");
         }
-
+      }
     </script>
-</body>
+  </body>
 </html>
