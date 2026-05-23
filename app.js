@@ -41,14 +41,14 @@ app.post('/register', async (req, res) => {
   try {
       const hashedPassword = await bcrypt.hash(password, 10);
       const query = 'INSERT INTO users (username, email, password) VALUES (?, ?, ?)';
-      
+
       db.query(query, [username, email, hashedPassword], (err, result) => {
           if (err) {
               console.error('Error registering user:', err);
               return res.status(500).json({ message: 'Error registering user' });
           }
           res.status(201).json({ message: 'User registered successfully!' });
-          window.location.href = './login.html';
+         // window.location.href = './login.html';
 
       });
   } catch (err) {
@@ -213,6 +213,117 @@ app.post('/api/bookings', (req, res) => {
         }
 
         res.json({ message: "Booking saved successfully" });
+    });
+});
+
+// Create Event
+app.post('/api/events', (req, res) => {
+    const { user_id, event_type, event_date, guests } = req.body;
+
+    const sql = `
+    INSERT INTO events (user_id, event_type, event_date, guests)
+    VALUES (?, ?, ?, ?)
+  `;
+
+    db.query(sql, [user_id, event_type, event_date, guests], (err, result) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Database error' });
+        }
+
+        res.json({
+            message: 'Event created successfully',
+            event_id: result.insertId
+        });
+    });
+});
+
+// Get All Events
+app.get('/api/events', (req, res) => {
+    const sql = `
+    SELECT events.*, users.username
+    FROM events
+    LEFT JOIN users ON events.user_id = users.id
+    ORDER BY events.id DESC
+  `;
+
+    db.query(sql, (err, results) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Database error' });
+        }
+
+        res.json(results);
+    });
+});
+
+// Delete Event
+app.delete('/api/events/:id', (req, res) => {
+    db.query('DELETE FROM events WHERE id = ?', [req.params.id], err => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Database error' });
+        }
+
+        res.json({ message: 'Event deleted successfully' });
+    });
+});
+
+// Add Booking Item
+app.post('/api/booking-items', (req, res) => {
+    const { booking_id, menu_id, quantity } = req.body;
+
+    const sql = `
+    INSERT INTO booking_items (booking_id, menu_id, quantity)
+    VALUES (?, ?, ?)
+  `;
+
+    db.query(sql, [booking_id, menu_id, quantity], (err, result) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Database error' });
+        }
+
+        res.json({
+            message: 'Booking item added successfully',
+            id: result.insertId
+        });
+    });
+});
+
+// Get Booking Items
+app.get('/api/booking-items/:booking_id', (req, res) => {
+    const sql = `
+    SELECT
+      booking_items.id,
+      booking_items.quantity,
+      menu.name,
+      menu.price,
+      menu.image
+    FROM booking_items
+    JOIN menu ON booking_items.menu_id = menu.id
+    WHERE booking_items.booking_id = ?
+  `;
+
+    db.query(sql, [req.params.booking_id], (err, results) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Database error' });
+        }
+
+        res.json(results);
+    });
+});
+
+// Delete Booking Item
+app.delete('/api/booking-items/:id', (req, res) => {
+    db.query('DELETE FROM booking_items WHERE id = ?', [req.params.id], err => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Database error' });
+        }
+
+        res.json({ message: 'Booking item deleted successfully' });
     });
 });
 

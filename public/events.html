@@ -57,22 +57,56 @@
     </div>
 
     <script>
-        function submitEvent() {
+
+        async function submitEvent() {
+
             // Get form values
             const eventType = document.getElementById('eventType').value;
             const numChefs = document.getElementById('numChefs').value;
             const eventDate = document.getElementById('eventDate').value;
             const eventTime = document.getElementById('eventTime').value;
 
-            // Store data in localStorage
-            localStorage.setItem('eventType', eventType);
-            localStorage.setItem('numChefs', numChefs);
-            localStorage.setItem('eventDate', eventDate);
-            localStorage.setItem('eventTime', eventTime);
+            try {
 
-            // Redirect to success page
-            window.location.href = 'event-summary.html';
+                const response = await fetch('http://localhost:3000/api/events', {
+
+                    method: 'POST',
+
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+
+                    body: JSON.stringify({
+                        user_id: localStorage.getItem("user_id"),
+                        event_type: eventType,
+                        event_date: eventDate,
+                        guests: numChefs
+                    })
+
+                });
+
+                const data = await response.json();
+
+                alert(data.message);
+
+                // Store locally if needed
+                localStorage.setItem('eventType', eventType);
+                localStorage.setItem('numChefs', numChefs);
+                localStorage.setItem('eventDate', eventDate);
+                localStorage.setItem('eventTime', eventTime);
+
+                // Redirect
+                window.location.href = 'event-summary.html';
+
+            } catch (error) {
+
+                console.log(error);
+                alert('Failed to book event');
+
+            }
+
         }
+
     </script>
 </body>
 </html>
