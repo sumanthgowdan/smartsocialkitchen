@@ -2,14 +2,11 @@ const express = require('express');
 const path = require('path');
 const cors = require('cors');
 const multer = require('multer');
-const mysql = require('mysql2');
-
+const { Pool } = require('pg');
 const bcrypt = require('bcrypt');
-const bodyParser = require("body-parser");
 
 const app = express();
 const PORT = 3000;
-
 
 // Middleware
 app.use(cors());
@@ -17,314 +14,705 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Configure MySQL connection
-const db = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: '132004', // Change password to your MySQL setup
-  database: 'social_kitchen'
-});
-
-db.connect(err => {
-  if (err) throw err;
-  console.log('Connected to database');
-});
-
-
-
-
-
-// Registration Route
-app.post('/register', async (req, res) => {
-  const { username, email, password } = req.body;
-
-  try {
-      const hashedPassword = await bcrypt.hash(password, 10);
-      const query = 'INSERT INTO users (username, email, password) VALUES (?, ?, ?)';
-
-      db.query(query, [username, email, hashedPassword], (err, result) => {
-          if (err) {
-              console.error('Error registering user:', err);
-              return res.status(500).json({ message: 'Error registering user' });
-          }
-          res.status(201).json({ message: 'User registered successfully!' });
-         // window.location.href = './login.html';
-
-      });
-  } catch (err) {
-      console.error('Error during registration:', err);
-      res.status(500).json({ message: 'Internal server error' });
+// PostgreSQL Connection
+const db = new Pool({
+  connectionString:
+    'postgresql://postgres.xqvqyrhympsjelqchlov:Sumanth132004@aws-1-ap-southeast-2.pooler.supabase.com:5432/postgres',
+  ssl: {
+    rejectUnauthorized: false
   }
 });
 
+db.connect()
+  .then(() => console.log('Connected to Supabase PostgreSQL'))
+  .catch(err => console.error('Database connection error', err));
 
-
-// Login Route
-app.post('/login', (req, res) => {
-  const { username, password } = req.body;
-
-  const query = 'SELECT * FROM users WHERE username = ?';
-  db.query(query, [username], async (err, results) => {
-      if (err) {
-          console.error('Error fetching user:', err);
-          return res.status(500).json({ message: 'Error during login' });
-      }
-
-      if (results.length === 0) {
-          return res.status(404).json({ message: 'User not found. Please register.' });
-      }
-
-      const user = results[0];
-      const isPasswordValid = await bcrypt.compare(password, user.password);
-
-      if (!isPasswordValid) {
-          return res.status(401).json({ message: 'Invalid credentials' });
-      }
-
-      res.status(200).json({ message: 'Login successful', user: { id: user.id, username: user.username } });
-  });
-});
-
-app.post('/admin-login', (req, res) => {
-  const { username, password } = req.body;
-
-  // Hardcoded admin credentials (you can later move this to a database)
-  const admin = { username: 'sumanth', password: 'sumanth132004' };
-
-  if (username === admin.username && password === admin.password) {
-      res.status(200).json({ message: 'Login successful!' });
-  } else {
-      res.status(401).json({ message: 'Invalid admin credentials!' });
-  }
-});
-
-
-
-
-
-
-
-
-// Multer configuration
+// Multer Configuration
 const storage = multer.diskStorage({
   destination: './public/uploads',
   filename: (req, file, cb) => {
     cb(null, Date.now() + path.extname(file.originalname));
   }
 });
+
 const upload = multer({ storage });
 
-// Routes
-app.get('/api/menus', (req, res) => {
-  db.query('SELECT * FROM menu', (err, results) => {
-    if (err) return res.status(500).json({ error: 'Database error' });
-    res.json(results);
-  });
+// ================= REGISTER =================
+
+app.post('/register', async (req, res) => {
+
+  const { username, email, password } = req.body;
+
+  try {
+
+    const hashedPassword =
+      await bcrypt.hash(password, 10);
+
+    const query = `
+      INSERT INTO users
+      (username, email, password)
+      VALUES ($1, $2, $3)
+    `;
+
+    await db.query(query, [
+      username,
+      email,
+      hashedPassword
+    ]);
+
+    res.status(201).json({
+      message: 'User registered successfully!'
+    });
+
+  } catch (err) {
+
+    console.error(err);
+
+    res.status(500).json({
+      message: 'Error registering user'
+    });
+
+  }
+
 });
 
-app.get('/api/chefs', (req, res) => {
-  db.query('SELECT * FROM chefs', (err, results) => {
-    if (err) return res.status(500).json({ error: 'Database error' });
-    res.json(results);
-  });
+// ================= LOGIN =================
+
+app.post('/login', async (req, res) => {
+
+  const { username, password } = req.body;
+
+  try {
+
+    const query =
+      'SELECT * FROM users WHERE username = $1';
+
+    const results =
+      await db.query(query, [username]);
+
+    if (results.rows.length === 0) {
+
+      return res.status(404).json({
+        message: 'User not found'
+      });
+
+    }
+
+    const user = results.rows[0];
+
+    const isPasswordValid =
+      await bcrypt.compare(password, user.password);
+
+    if (!isPasswordValid) {
+
+      return res.status(401).json({
+        message: 'Invalid credentials'
+      });
+
+    }
+
+    res.status(200).json({
+      message: 'Login successful',
+      user: {
+        id: user.id,
+        username: user.username
+      }
+    });
+
+  } catch (err) {
+
+    console.error(err);
+
+    res.status(500).json({
+      message: 'Error during login'
+    });
+
+  }
+
 });
 
-app.post('/api/menus', upload.single('image'), (req, res) => {
-  const { name, description, price } = req.body;
-  const image = req.file ? `/uploads/${req.file.filename}` : null;
-  const sql = 'INSERT INTO menu (name, description, price, image) VALUES (?, ?, ?, ?)';
-  db.query(sql, [name, description, price, image], err => {
-    if (err) return res.status(500).json({ error: 'Database error' });
-    res.json({ message: 'Menu item added successfully' });
-  });
+// ================= ADMIN LOGIN =================
+
+app.post('/admin-login', (req, res) => {
+
+  const { username, password } = req.body;
+
+  const admin = {
+    username: 'sumanth',
+    password: 'sumanth132004'
+  };
+
+  if (
+    username === admin.username &&
+    password === admin.password
+  ) {
+
+    res.status(200).json({
+      message: 'Login successful!'
+    });
+
+  } else {
+
+    res.status(401).json({
+      message: 'Invalid admin credentials!'
+    });
+
+  }
+
 });
 
-app.post('/api/chefs', upload.single('image'), (req, res) => {
-  const { name, specialty } = req.body;
-  const image = req.file ? `/uploads/${req.file.filename}` : null;
-  const sql = 'INSERT INTO chefs (name, specialty, image) VALUES (?, ?, ?)';
-  db.query(sql, [name, specialty, image], err => {
-    if (err) return res.status(500).json({ error: 'Database error' });
-    res.json({ message: 'Chef added successfully' });
-  });
+// ================= GET MENUS =================
+
+app.get('/api/menus', async (req, res) => {
+
+  try {
+
+    const results =
+      await db.query('SELECT * FROM menu');
+
+    res.json(results.rows);
+
+  } catch (err) {
+
+    console.error(err);
+
+    res.status(500).json({
+      error: 'Database error'
+    });
+
+  }
+
 });
 
-// Update menu
-app.put('/api/menus/:id', upload.single('image'), (req, res) => {
-  const { name, description, price } = req.body;
-  const image = req.file ? `/uploads/${req.file.filename}` : null;
-  const sql = image
-    ? 'UPDATE menu SET name = ?, description = ?, price = ?, image = ? WHERE id = ?'
-    : 'UPDATE menu SET name = ?, description = ?, price = ? WHERE id = ?';
-  const params = image
-    ? [name, description, price, image, req.params.id]
-    : [name, description, price, req.params.id];
+// ================= GET CHEFS =================
 
-  db.query(sql, params, err => {
-    if (err) return res.status(500).json({ error: 'Database error' });
-    res.json({ message: 'Menu item updated successfully' });
-  });
+app.get('/api/chefs', async (req, res) => {
+
+  try {
+
+    const results =
+      await db.query('SELECT * FROM chefs');
+
+    res.json(results.rows);
+
+  } catch (err) {
+
+    console.error(err);
+
+    res.status(500).json({
+      error: 'Database error'
+    });
+
+  }
+
 });
 
-// Update chef
-app.put('/api/chefs/:id', upload.single('image'), (req, res) => {
-  const { name, specialty } = req.body;
-  const image = req.file ? `/uploads/${req.file.filename}` : null;
-  const sql = image
-    ? 'UPDATE chefs SET name = ?, specialty = ?, image = ? WHERE id = ?'
-    : 'UPDATE chefs SET name = ?, specialty = ? WHERE id = ?';
-  const params = image
-    ? [name, specialty, image, req.params.id]
-    : [name, specialty, req.params.id];
+// ================= ADD MENU =================
 
-  db.query(sql, params, err => {
-    if (err) return res.status(500).json({ error: 'Database error' });
-    res.json({ message: 'Chef updated successfully' });
-  });
-});
+app.post('/api/menus', upload.single('image'), async (req, res) => {
 
-// Delete routes remain unchanged
-app.delete('/api/menus/:id', (req, res) => {
-  db.query('DELETE FROM menu WHERE id = ?', [req.params.id], err => {
-    if (err) return res.status(500).json({ error: 'Database error' });
-    res.json({ message: 'Menu item deleted successfully' });
-  });
-});
+  try {
 
-app.delete('/api/chefs/:id', (req, res) => {
-  db.query('DELETE FROM chefs WHERE id = ?', [req.params.id], err => {
-    if (err) return res.status(500).json({ error: 'Database error' });
-    res.json({ message: 'Chef deleted successfully' });
-  });
-});
+    const { name, description, price } = req.body;
 
-app.post('/api/bookings', (req, res) => {
-    const { user_id, chef_id, booking_date, booking_time, total_amount } = req.body;
+    const image =
+      req.file ? `/uploads/${req.file.filename}` : null;
 
     const sql = `
-    INSERT INTO bookings (user_id, chef_id, booking_date, booking_time, total_amount)
-    VALUES (?, ?, ?, ?, ?)
-  `;
+      INSERT INTO menu
+      (name, description, price, image)
+      VALUES ($1, $2, $3, $4)
+    `;
 
-    db.query(sql, [user_id, chef_id, booking_date, booking_time, total_amount], (err, result) => {
-        if (err) {
-            console.error("Booking error:", err);
-            return res.status(500).json({ message: "Database error" });
-        }
+    await db.query(sql, [
+      name,
+      description,
+      price,
+      image
+    ]);
 
-        res.json({ message: "Booking saved successfully" });
+    res.json({
+      message: 'Menu item added successfully'
     });
+
+  } catch (err) {
+
+    console.error(err);
+
+    res.status(500).json({
+      error: 'Database error'
+    });
+
+  }
+
 });
 
-// Create Event
-app.post('/api/events', (req, res) => {
-    const { user_id, event_type, event_date, guests } = req.body;
+// ================= ADD CHEF =================
+
+app.post('/api/chefs', upload.single('image'), async (req, res) => {
+
+  try {
+
+    const { name, specialty } = req.body;
+
+    const image =
+      req.file ? `/uploads/${req.file.filename}` : null;
 
     const sql = `
-    INSERT INTO events (user_id, event_type, event_date, guests)
-    VALUES (?, ?, ?, ?)
-  `;
+      INSERT INTO chefs
+      (name, specialty, image)
+      VALUES ($1, $2, $3)
+    `;
 
-    db.query(sql, [user_id, event_type, event_date, guests], (err, result) => {
-        if (err) {
-            console.error(err);
-            return res.status(500).json({ error: 'Database error' });
-        }
+    await db.query(sql, [
+      name,
+      specialty,
+      image
+    ]);
 
-        res.json({
-            message: 'Event created successfully',
-            event_id: result.insertId
-        });
+    res.json({
+      message: 'Chef added successfully'
     });
+
+  } catch (err) {
+
+    console.error(err);
+
+    res.status(500).json({
+      error: 'Database error'
+    });
+
+  }
+
 });
 
-// Get All Events
-app.get('/api/events', (req, res) => {
+// ================= UPDATE MENU =================
+
+app.put('/api/menus/:id', upload.single('image'), async (req, res) => {
+
+  try {
+
+    const { name, description, price } = req.body;
+
+    const image =
+      req.file ? `/uploads/${req.file.filename}` : null;
+
+    if (image) {
+
+      await db.query(
+        `UPDATE menu
+         SET name=$1,
+             description=$2,
+             price=$3,
+             image=$4
+         WHERE id=$5`,
+        [
+          name,
+          description,
+          price,
+          image,
+          req.params.id
+        ]
+      );
+
+    } else {
+
+      await db.query(
+        `UPDATE menu
+         SET name=$1,
+             description=$2,
+             price=$3
+         WHERE id=$4`,
+        [
+          name,
+          description,
+          price,
+          req.params.id
+        ]
+      );
+
+    }
+
+    res.json({
+      message: 'Menu updated successfully'
+    });
+
+  } catch (err) {
+
+    console.error(err);
+
+    res.status(500).json({
+      error: 'Database error'
+    });
+
+  }
+
+});
+
+// ================= UPDATE CHEF =================
+
+app.put('/api/chefs/:id', upload.single('image'), async (req, res) => {
+
+  try {
+
+    const { name, specialty } = req.body;
+
+    const image =
+      req.file ? `/uploads/${req.file.filename}` : null;
+
+    if (image) {
+
+      await db.query(
+        `UPDATE chefs
+         SET name=$1,
+             specialty=$2,
+             image=$3
+         WHERE id=$4`,
+        [
+          name,
+          specialty,
+          image,
+          req.params.id
+        ]
+      );
+
+    } else {
+
+      await db.query(
+        `UPDATE chefs
+         SET name=$1,
+             specialty=$2
+         WHERE id=$3`,
+        [
+          name,
+          specialty,
+          req.params.id
+        ]
+      );
+
+    }
+
+    res.json({
+      message: 'Chef updated successfully'
+    });
+
+  } catch (err) {
+
+    console.error(err);
+
+    res.status(500).json({
+      error: 'Database error'
+    });
+
+  }
+
+});
+
+// ================= DELETE MENU =================
+
+app.delete('/api/menus/:id', async (req, res) => {
+
+  try {
+
+    await db.query(
+      'DELETE FROM menu WHERE id = $1',
+      [req.params.id]
+    );
+
+    res.json({
+      message: 'Menu deleted successfully'
+    });
+
+  } catch (err) {
+
+    console.error(err);
+
+    res.status(500).json({
+      error: 'Database error'
+    });
+
+  }
+
+});
+
+// ================= DELETE CHEF =================
+
+app.delete('/api/chefs/:id', async (req, res) => {
+
+  try {
+
+    await db.query(
+      'DELETE FROM chefs WHERE id = $1',
+      [req.params.id]
+    );
+
+    res.json({
+      message: 'Chef deleted successfully'
+    });
+
+  } catch (err) {
+
+    console.error(err);
+
+    res.status(500).json({
+      error: 'Database error'
+    });
+
+  }
+
+});
+
+// ================= BOOKINGS =================
+
+app.post('/api/bookings', async (req, res) => {
+
+  try {
+
+    const {
+      user_id,
+      chef_id,
+      booking_date,
+      booking_time,
+      total_amount
+    } = req.body;
+
     const sql = `
-    SELECT events.*, users.username
-    FROM events
-    LEFT JOIN users ON events.user_id = users.id
-    ORDER BY events.id DESC
-  `;
+      INSERT INTO bookings
+      (user_id, chef_id, booking_date, booking_time, total_amount)
+      VALUES ($1, $2, $3, $4, $5)
+    `;
 
-    db.query(sql, (err, results) => {
-        if (err) {
-            console.error(err);
-            return res.status(500).json({ error: 'Database error' });
-        }
+    await db.query(sql, [
+      user_id,
+      chef_id,
+      booking_date,
+      booking_time,
+      total_amount
+    ]);
 
-        res.json(results);
+    res.json({
+      message: 'Booking saved successfully'
     });
+
+  } catch (err) {
+
+    console.error(err);
+
+    res.status(500).json({
+      error: 'Database error'
+    });
+
+  }
+
 });
 
-// Delete Event
-app.delete('/api/events/:id', (req, res) => {
-    db.query('DELETE FROM events WHERE id = ?', [req.params.id], err => {
-        if (err) {
-            console.error(err);
-            return res.status(500).json({ error: 'Database error' });
-        }
+// ================= EVENTS =================
 
-        res.json({ message: 'Event deleted successfully' });
-    });
-});
+app.post('/api/events', async (req, res) => {
 
-// Add Booking Item
-app.post('/api/booking-items', (req, res) => {
-    const { booking_id, menu_id, quantity } = req.body;
+  try {
+
+    const {
+      user_id,
+      event_type,
+      event_date,
+      guests
+    } = req.body;
 
     const sql = `
-    INSERT INTO booking_items (booking_id, menu_id, quantity)
-    VALUES (?, ?, ?)
-  `;
+      INSERT INTO events
+      (user_id, event_type, event_date, guests)
+      VALUES ($1, $2, $3, $4)
+    `;
 
-    db.query(sql, [booking_id, menu_id, quantity], (err, result) => {
-        if (err) {
-            console.error(err);
-            return res.status(500).json({ error: 'Database error' });
-        }
+    await db.query(sql, [
+      user_id,
+      event_type,
+      event_date,
+      guests
+    ]);
 
-        res.json({
-            message: 'Booking item added successfully',
-            id: result.insertId
-        });
+    res.json({
+      message: 'Event created successfully'
     });
+
+  } catch (err) {
+
+    console.error(err);
+
+    res.status(500).json({
+      error: 'Database error'
+    });
+
+  }
+
 });
 
-// Get Booking Items
-app.get('/api/booking-items/:booking_id', (req, res) => {
+// ================= GET EVENTS =================
+
+app.get('/api/events', async (req, res) => {
+
+  try {
+
     const sql = `
-    SELECT
-      booking_items.id,
-      booking_items.quantity,
-      menu.name,
-      menu.price,
-      menu.image
-    FROM booking_items
-    JOIN menu ON booking_items.menu_id = menu.id
-    WHERE booking_items.booking_id = ?
-  `;
+      SELECT events.*, users.username
+      FROM events
+      LEFT JOIN users
+      ON events.user_id = users.id
+      ORDER BY events.id DESC
+    `;
 
-    db.query(sql, [req.params.booking_id], (err, results) => {
-        if (err) {
-            console.error(err);
-            return res.status(500).json({ error: 'Database error' });
-        }
+    const results =
+      await db.query(sql);
 
-        res.json(results);
+    res.json(results.rows);
+
+  } catch (err) {
+
+    console.error(err);
+
+    res.status(500).json({
+      error: 'Database error'
     });
+
+  }
+
 });
 
-// Delete Booking Item
-app.delete('/api/booking-items/:id', (req, res) => {
-    db.query('DELETE FROM booking_items WHERE id = ?', [req.params.id], err => {
-        if (err) {
-            console.error(err);
-            return res.status(500).json({ error: 'Database error' });
-        }
+// ================= DELETE EVENT =================
 
-        res.json({ message: 'Booking item deleted successfully' });
+app.delete('/api/events/:id', async (req, res) => {
+
+  try {
+
+    await db.query(
+      'DELETE FROM events WHERE id = $1',
+      [req.params.id]
+    );
+
+    res.json({
+      message: 'Event deleted successfully'
     });
+
+  } catch (err) {
+
+    console.error(err);
+
+    res.status(500).json({
+      error: 'Database error'
+    });
+
+  }
+
 });
 
-app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+// ================= BOOKING ITEMS =================
+
+app.post('/api/booking-items', async (req, res) => {
+
+  try {
+
+    const {
+      booking_id,
+      menu_id,
+      quantity
+    } = req.body;
+
+    const sql = `
+      INSERT INTO booking_items
+      (booking_id, menu_id, quantity)
+      VALUES ($1, $2, $3)
+    `;
+
+    await db.query(sql, [
+      booking_id,
+      menu_id,
+      quantity
+    ]);
+
+    res.json({
+      message: 'Booking item added successfully'
+    });
+
+  } catch (err) {
+
+    console.error(err);
+
+    res.status(500).json({
+      error: 'Database error'
+    });
+
+  }
+
+});
+
+// ================= GET BOOKING ITEMS =================
+
+app.get('/api/booking-items/:booking_id', async (req, res) => {
+
+  try {
+
+    const sql = `
+      SELECT
+        booking_items.id,
+        booking_items.quantity,
+        menu.name,
+        menu.price,
+        menu.image
+      FROM booking_items
+      JOIN menu
+      ON booking_items.menu_id = menu.id
+      WHERE booking_items.booking_id = $1
+    `;
+
+    const results =
+      await db.query(sql, [
+        req.params.booking_id
+      ]);
+
+    res.json(results.rows);
+
+  } catch (err) {
+
+    console.error(err);
+
+    res.status(500).json({
+      error: 'Database error'
+    });
+
+  }
+
+});
+
+// ================= DELETE BOOKING ITEM =================
+
+app.delete('/api/booking-items/:id', async (req, res) => {
+
+  try {
+
+    await db.query(
+      'DELETE FROM booking_items WHERE id = $1',
+      [req.params.id]
+    );
+
+    res.json({
+      message: 'Booking item deleted successfully'
+    });
+
+  } catch (err) {
+
+    console.error(err);
+
+    res.status(500).json({
+      error: 'Database error'
+    });
+
+  }
+
+});
+
+// ================= SERVER =================
+
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+});
