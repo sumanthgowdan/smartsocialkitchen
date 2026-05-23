@@ -1,12 +1,17 @@
 const express = require('express');
 const path = require('path');
+const fs = require('fs');
 const cors = require('cors');
 const multer = require('multer');
 const { Pool } = require('pg');
 const bcrypt = require('bcrypt');
 
+if (!fs.existsSync('./public/uploads')) {
+  fs.mkdirSync('./public/uploads', { recursive: true });
+}
+
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors());
@@ -138,8 +143,8 @@ app.post('/admin-login', (req, res) => {
   const { username, password } = req.body;
 
   const admin = {
-    username: 'sumanth',
-    password: 'sumanth132004'
+    username: process.env.ADMIN_USER,
+    password: process.env.ADMIN_PASS
   };
 
   if (
@@ -711,8 +716,14 @@ app.delete('/api/booking-items/:id', async (req, res) => {
 
 });
 
+// ================= HOME ROUTE =================
+
+app.get('/', (req, res) => {
+  res.send('Server Running Successfully');
+});
+
 // ================= SERVER =================
 
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
