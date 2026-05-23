@@ -4,7 +4,7 @@ function handleAdminLogin(event) {
     const username = document.getElementById('adminUsername').value;
     const password = document.getElementById('adminPassword').value;
 
-    fetch('http://localhost:3000/admin-login', {
+    fetch('/admin-login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),
