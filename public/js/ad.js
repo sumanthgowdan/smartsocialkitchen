@@ -61,7 +61,7 @@ async function fetchChefData() {
             <tr>
                 <td>${chef.name}</td>
                 <td>${chef.specialty}</td>
-                <td><img src="${API_BASE_URL}${menu.image}" alt="${chef.name}" width="50"></td>
+                <td><img src="${API_BASE_URL}${chef.image}" alt="${chef.name}" width="50"></td>
                 <td>
                     <button onclick="editChef(${chef.id}, '${chef.name}', '${chef.specialty}', '${chef.image}')">Edit</button>
                     <button onclick="deleteChef(${chef.id})">Delete</button>
